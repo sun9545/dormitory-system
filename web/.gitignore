@@ -1,0 +1,43 @@
+# ========== 敏感配置文件 ==========
+config/env.php              # ⚠️ 包含数据库密码和Token
+config/database.php
+config/config.php
+
+# ========== 用户数据和上传文件 ==========
+uploads/*
+!uploads/.gitkeep
+!uploads/README.md
+
+# ========== 数据库备份 ==========
+*.sql                       # ⚠️ 包含真实学生数据
+backups/*                   # 数据库备份目录
+backup_*.sql
+
+# ========== 日志和缓存 ==========
+logs/*
+!logs/.gitkeep
+cache/*
+!cache/.gitkeep
+
+# Composer依赖
+vendor/
+composer.phar
+
+# 系统和临时文件
+.user.ini
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# ========== IDE配置 ==========
+.vscode/
+.idea/
+*.code-workspace
+
+# ========== 测试和调试文件 ==========
+test_*.php
+debug_*.php
+phpinfo.php
+*_temp.php

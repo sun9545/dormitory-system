@@ -1,0 +1,73 @@
+# ========== 系统文件 ==========
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# ========== 环境配置文件（敏感信息）==========
+web/config/env.php
+web/config/database.php
+web/config/config.php
+
+# ========== 上传和用户数据 ==========
+web/uploads/*
+!web/uploads/.gitkeep
+!web/uploads/README.md
+
+# ========== 数据库备份 ==========
+*.sql
+!database/schema.sql
+web/backups/*
+backup_*.sql
+
+# ========== 日志和缓存 ==========
+web/logs/*
+!web/logs/.gitkeep
+web/cache/*
+!web/cache/.gitkeep
+
+# ========== Composer ==========
+web/vendor/
+composer.phar
+composer.lock
+
+# ========== 临时文件 ==========
+*.tmp
+*.bak
+*.log
+*.pid
+web/.user.ini
+
+# ========== SSL证书验证 ==========
+web/.well-known/
+
+# ========== 测试和调试文件 ==========
+web/test_*.php
+web/debug_*.php
+web/phpinfo.php
+web/*_temp.php
+
+# ========== ESP32编译输出 ==========
+esp32/**/*.bin
+esp32/**/*.elf
+esp32/**/*.map
+esp32/**/build/
+
+# ========== Node.js（如果使用）==========
+node_modules/
+package-lock.json
+
+# ========== Python（如果使用）==========
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# ========== Git ==========
+.git/
+.gitattributes
+

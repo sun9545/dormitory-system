@@ -1,0 +1,17 @@
+# 学生查寝系统定时任务示例
+# 使用方式：crontab -e 然后粘贴以下内容并保存
+
+# 每天凌晨3点执行系统维护脚本（优化数据库、清理日志）
+0 3 * * * php /path/to/your/project/maintenance.php >> /path/to/your/project/logs/maintenance.log 2>&1
+
+# 每6小时清理过期缓存
+0 */6 * * * php -r "require_once('/path/to/your/project/config/config.php'); require_once('/path/to/your/project/utils/cache.php'); \$cache = new Cache(); \$files = glob(\$cache->getStats()['directory'] . '/*.cache'); foreach(\$files as \$file) { \$data = unserialize(file_get_contents(\$file)); if(\$data['expire'] < time()) { @unlink(\$file); } }" >> /path/to/your/project/logs/cache_cleanup.log 2>&1
+
+# 每天凌晨2点创建数据库备份
+0 2 * * * mysqldump -uYOUR_DB_USER -pYOUR_DB_PASSWORD --single-transaction --quick your_database_name > /path/to/backup/your_database_$(date +\%Y\%m\%d).sql 2>> /path/to/logs/backup.log
+
+# 每周日凌晨4点清理超过14天的备份
+0 4 * * 0 find /path/to/backup/ -name "your_database_name_*.sql" -type f -mtime +14 -delete
+
+# 每天午夜压缩前一天的日志
+5 0 * * * find /path/to/your/project/logs/ -name "*.log" -type f -mtime 1 -exec gzip {} \; 
