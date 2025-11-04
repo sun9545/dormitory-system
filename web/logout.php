@@ -1,4 +1,4 @@
-<?php
+<?php 
 /**
  * 注销页面
  */
@@ -19,37 +19,36 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 // 执行注销操作
 logout();
 
-// 获取站点所有可能的路径
-$possiblePaths = [
-    '/', 
-    '/admin/', 
-    dirname($_SERVER['REQUEST_URI']), 
-    parse_url(BASE_URL, PHP_URL_PATH),
-    '/www/', 
-    '/wwwroot/', 
-    '/www/wwwroot/',
-    ''
-];
+// ========== 精准清除 Cookie ==========
+// 获取 session cookie 的实际参数
+$sessionParams = session_get_cookie_params();
 
-$cookieNames = [session_name(), 'PHPSESSID', 'remember', 'login', 'user', 'auth', 'token', 'session'];
-$domains = ['', '.'.parse_url(BASE_URL, PHP_URL_HOST), parse_url(BASE_URL, PHP_URL_HOST)];
+// 1. 清除 session cookie（使用实际参数）
+setcookie(
+    session_name(),
+    '',
+    time() - 3600,
+    $sessionParams['path'],
+    $sessionParams['domain'],
+    $sessionParams['secure'],
+    $sessionParams['httponly']
+);
+error_log("清除 session cookie: " . session_name());
 
-// 对所有可能的路径和cookie名称进行交叉清除
-foreach ($cookieNames as $name) {
-    foreach ($possiblePaths as $path) {
-        foreach ($domains as $domain) {
-            // 尝试用多种组合清除cookie
-            setcookie($name, '', time() - 3600, $path, $domain);
-            setcookie($name, '', time() - 3600, $path, $domain, false, true);
-            error_log("尝试删除cookie: {$name}, 路径: {$path}, 域: {$domain}");
-        }
-    }
+// 2. 清除常用的应用 cookie（使用根路径）
+$appCookies = ['PHPSESSID', 'remember', 'login', 'user', 'auth', 'token'];
+foreach ($appCookies as $cookieName) {
+    setcookie($cookieName, '', time() - 3600, '/', '', false, true);
+    error_log("清除应用 cookie: {$cookieName}");
 }
 
-// 清除全局变量
+// ========== 清除 Session ==========
 $_SESSION = [];
-session_unset();
-session_destroy();
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_unset();
+    session_destroy();
+}
+
 
 // 确保浏览器强制刷新而不是加载缓存
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
